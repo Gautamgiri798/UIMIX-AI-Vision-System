@@ -1,7 +1,7 @@
 ## 🌌 **UIMIX | AI Vision System**
 UIMIX is a high-performance, real-time object detection dashboard built for both desktop and mobile environments. Utilizing a custom-engineered HUD and an optimized TensorRT inference engine, it provides military-grade visual tracking with ultra-low latency.
 
-**🌐 Live Deployment:** [https://uimix-vision-system.onrender.com]([https://uimix-vision-system.onrender.com](https://uimix-ai-vision-system.onrender.com))
+**🌐 Live Deployment:** ([https://uimix-vision-system.onrender.com](https://uimix-ai-vision-system.onrender.com))
 
 ![Python 3.10](https://img.shields.io/badge/Engine-Python_3.10-blue?style=for-the-badge&logo=python)
 ![TensorRT](https://img.shields.io/badge/Optimization-TensorRT_FP16-76B900?style=for-the-badge&logo=nvidia)
