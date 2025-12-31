@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UIMIX | AI Vision System</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        /* CSS adapted from the Next.js/React design */
+        :root { --accent-opacity: rgba(255, 255, 255, 0.2); }
+        body { background-color: #000; color: #fff; font-family: 'Courier New', Courier, monospace; overflow: hidden; margin: 0; }
+        
+        .stars-bg {
+            position: absolute; inset: 0; opacity: 0.3; z-index: -1;
+            background-image: radial-gradient(1px 1px at 20% 30%, white, transparent), radial-gradient(1px 1px at 50% 50%, white, transparent);
+            background-size: 200% 200%;
+        }
+
+        .header-bar { position: absolute; top: 0; width: 100%; border-bottom: 1px solid var(--accent-opacity); z-index: 20; padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-weight: bold; font-style: italic; font-size: 24px; letter-spacing: 0.2em; transform: skewX(-12deg); }
+
+        .dashboard-container { display: grid; grid-template-columns: 1fr 350px; gap: 40px; height: 100vh; padding: 100px 50px 80px 50px; box-sizing: border-box; position: relative; z-index: 10; }
+        
+        .video-wrapper { position: relative; border: 1px solid var(--accent-opacity); background: rgba(0,0,0,0.6); display: flex; align-items: center; justify-content: center; overflow: hidden; }
+        /* Use object-fit: contain to preserve aspect ratio regardless of container size */
+        #video-stream { width: 100%; height: auto; display: block; filter: brightness(0.9) contrast(1.1); object-fit: contain; }
+        
+        /* Technical Framing */
+        .corner { position: absolute; width: 20px; height: 20px; border: 2px solid rgba(255,255,255,0.3); z-index: 21; }
+        .top-left { top: 0; left: 0; border-right: 0; border-bottom: 0; }
+        .top-right { top: 0; right: 0; border-left: 0; border-bottom: 0; }
+
+        .controls-panel { background: rgba(255,255,255,0.05); backdrop-filter: blur(10px); padding: 30px; border-left: 1px solid var(--accent-opacity); display: flex; flex-direction: column; gap: 20px; }
+        
+        /* Tech Buttons */
+        .tech-btn { width: 100%; padding: 12px; background: transparent; border: 1px solid #fff; color: #fff; cursor: pointer; font-family: inherit; font-size: 12px; letter-spacing: 1px; transition: 0.3s; }
+        .tech-btn:hover { background: #fff; color: #000; }
+        .btn-snapshot { border-color: #28a745; color: #28a745; }
+        .btn-snapshot:hover { background: #28a745; color: #fff; }
+        .btn-latency { border-color: #ffc107; color: #ffc107; }
+        .btn-latency:hover { background: #ffc107; color: #000; }
+        
+        /* Custom styled containers for selectors */
+        .res-container { display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.05); padding: 10px; border-radius: 4px; border: 1px solid var(--accent-opacity); }
+
+        .status-footer { position: absolute; bottom: 0; width: 100%; border-top: 1px solid var(--accent-opacity); padding: 10px 30px; font-size: 10px; opacity: 0.5; display: flex; justify-content: space-between; }
+        
+        .toast { visibility: hidden; position: fixed; right: 30px; bottom: 70px; background: #28a745; color: white; padding: 15px 25px; border-radius: 4px; z-index: 1000; }
+        .toast.show { visibility: visible; animation: fadein 0.5s; }
+        @keyframes fadein { from { bottom: 0; opacity: 0; } to { bottom: 70px; opacity: 1; } }
+    </style>
+</head>
+<body>
+
+    <div style="position: absolute; inset: 0; z-index: -1;">
+        <div data-us-project="whwOGlfJ5Rz2rHaEUgHl" style="width: 100%; height: 100vh;"></div>
+    </div>
+    <div class="stars-bg"></div>
+
+    <header class="header-bar">
+        <div class="logo"><i>OBJECT DETECTION</i></div>
+        <div style="font-size: 10px; opacity: 0.6;"><h3><i>LAT: 37.7749° | LONG: 122.4194°</i></h3</div>
+    </header>
+
+    <main class="dashboard-container">
+        <div class="video-wrapper">
+            <div class="corner top-left"></div>
+            <div class="corner top-right"></div>
+            <img id="video-stream" src="{{ url_for('video_feed') }}" alt="AI Live Feed">
+        </div>
+
+        <aside class="controls-panel">
+            <h3 style="margin-top: 0; font-size: 14px; letter-spacing: 2px;">SYSTEM.CORE</h3>
+            
+            <div class="res-container">
+                <span style="opacity: 0.6; font-size: 11px;">RATIO:</span>
+                <button id="ratio-btn" onclick="toggleAspectRatio()" class="tech-btn" style="width: auto; padding: 5px 15px; margin: 0; border-color: #17a2b8; color: #17a2b8;">16:9</button>
+            </div>
+
+            <div class="res-container">
+    <span style="opacity: 0.6; font-size: 11px;">RATIO:</span>
+    <button id="ratio-btn" onclick="toggleAspectRatio()" class="tech-btn" style="width: auto; padding: 5px 15px; margin: 0; border-color: #17a2b8; color: #17a2b8;">
+        16:9
+    </button>
+</div>
+
+<div class="res-container">
+    <span style="opacity: 0.6; font-size: 11px;">QUALITY:</span>
+    <select id="res-select" onchange="updateResolution()" style="background: #000; color: #fff; border: 1px solid #444; padding: 5px; outline: none; cursor: pointer;">
+        </select>
+</div>
+
+            <hr style="border: 0; border-top: 1px solid var(--accent-opacity); margin: 10px 0;">
+
+            <button onclick="takeScreenshot()" class="tech-btn btn-snapshot">📸 TAKE SNAPSHOT</button>
+            <button id="latency-btn" onclick="toggleLatency()" class="tech-btn btn-latency">⚡ LOW LATENCY: OFF</button>
+            <button onclick="resetTracker()" class="tech-btn">🔄 RESET TRACKER</button>
+            <button id="toggle-btn" class="tech-btn" style="border-color: #007bff; color: #007bff;">PAUSE STREAM</button>
+        </aside>
+    </main>
+
+    <footer class="status-footer">
+    <div id="system-status">SYSTEM.ACTIVE // NVIDIA_RTX_CUDA</div>
+    <div id="fps-display">◐ PERFORMANCE: <span id="fps-value">0</span> FPS</div>
+</footer>
+
+    <div id="notification-toast" class="toast">ACTION CONFIRMED</div>
+
+    <script>
+        !function(){if(!window.UnicornStudio){window.UnicornStudio={isInitialized:!1};var i=document.createElement("script");i.src="https://cdn.jsdelivr.net/gh/hiunicornstudio/unicornstudio.js@v1.4.33/dist/unicornStudio.umd.js";i.onload=function(){window.UnicornStudio.isInitialized||(UnicornStudio.init(),window.UnicornStudio.isInitialized=!0)};(document.head||document.body).appendChild(i)}}();
+    </script>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>

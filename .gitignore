@@ -1,0 +1,37 @@
+# --- AI MODELS & ENGINES ---
+# Ignore large model files and optimized engines
+*.pt
+*.engine
+*.onnx
+*.weights
+
+# --- SYSTEM CAPTURES ---
+# Ignore the local storage for screenshots and recordings
+captures/
+shots/
+*.jpg
+*.png
+*.mp4
+
+# --- PYTHON & ENVIRONMENT ---
+# Ignore compiled python files and virtual environments
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+.venv/
+env/
+.env
+
+# --- FLASK & LOGS ---
+# Ignore flask instance and log files
+instance/
+.pytest_cache/
+*.log
+
+# --- OPERATING SYSTEM ---
+# Ignore OS-specific hidden files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
