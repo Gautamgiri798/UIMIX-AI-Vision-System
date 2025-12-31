@@ -33,9 +33,9 @@ pip install -r requirements.txt
 ```
 3. Model Optimization
 To reach the speeds displayed in the FPS counter, export your model to the TensorRT engine format:
-```
-Python
 
+Python
+```
 from ultralytics import YOLO
 model = YOLO('yolov8n.pt')
 model.export(format='engine', half=True, device=0)
